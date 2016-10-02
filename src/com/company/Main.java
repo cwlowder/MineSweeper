@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class Main {
-
+    public static int test0 = 0;
+    public static int test1 = 0;
+    public static int test2 = 0;
     public static void main(String[] args) {
         int dimension = getValueConsole( "What dimension should the board be?" , Integer.MAX_VALUE );
         int numMines = getValueConsole( "How many mines should be placed?" , dimension*dimension );
@@ -18,18 +20,23 @@ public class Main {
         int numTrails = 100000;
 
         for ( int i = 0 ; i < numTrails ; i++ ) {
+            System.out.println( "TRIAL:" + i );
             Board board = new Board( dimension , numMines );
             Solver solve = new Solver( board , numMines );
 
+            //boolean isSolved = solve.randomlySolve();//.solve();
             boolean isSolved = solve.solve();
+
             if ( isSolved ) {
                 numWins++;
             }
-
         }
         System.out.println( "WINS: " + numWins + "/" + numTrails );
         System.out.println( "WIN%: " + 100*( (float) numWins / (float) numTrails) + "%" );
-        /*while (true) {
+        System.out.println( "Prob:" +test0 +" Random:"+test1 + " NoSolution:"+test2);
+        /*
+        Board board = new Board(dimension, numMines);
+        while (true) {
             int xPos = getValueConsole( "What X position should be digged?" , dimension - 1 );
             int yPos = getValueConsole( "What Y position should be digged?" , dimension - 1 );
 
