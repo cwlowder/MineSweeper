@@ -3,7 +3,7 @@ package com.company;
 public class Element {
     private int x;
     private int y;
-    private boolean isCovered = false;
+    private boolean isCovered = true;
     private boolean isMine;
     private int neighborMines = 0;
 

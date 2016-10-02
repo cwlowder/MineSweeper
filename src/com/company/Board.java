@@ -13,28 +13,19 @@ public class Board {
         calcNumNeighborMines();
     }
 
-    public String toString() {
-        String boardString ="";
-        for ( int y = 0 ; y < dimension ; y++ ) {
-            for ( int x = 0 ; x < dimension ; x++ ) {
-                if ( board[x][y].isCovered() ) {
-                    boardString += "◼";
-                }
-                else {
-                    if ( board[x][y].isMined() ) {
-                        boardString += "M";
-                    }
-                    else if ( board[x][y].getNeighborMines() > 0 ) {
-                        boardString += board[x][y].getNeighborMines();
-                    }
-                    else {
-                        boardString += ".";
-                    }
+    public void uncoverLocation( int x , int y ) {
+        board[x][y].reveal();
+        ArrayList<Element> neighbors = findNeighbors( x , y );
+
+        // only empty cells should reveal neighbor cells
+        if ( board[x][y].getNeighborMines() == 0 ) {
+            for (Element neighbor : neighbors) {
+                // reveals neighbors that are covered and not mines
+                if (neighbor.isCovered() && !neighbor.isMined()) {
+                    uncoverLocation(neighbor.getX(), neighbor.getY());
                 }
             }
-            boardString += "\n";
         }
-        return boardString;
     }
 
     /*
@@ -119,16 +110,18 @@ public class Board {
                     shouldAdd = false;
                 }
                 // Tests if point is out of bounds
-                else if ( x < 0 || y < 0 ) {
+                else if ( i < 0 || j < 0 ) {
                     shouldAdd = false;
                 }
                 // Tests if point is out of bounds
-                else if ( x > dimension || y > dimension ) {
+                else if ( i >= dimension || j >= dimension ) {
                     shouldAdd = false;
                 }
 
                 if ( shouldAdd ) {
-                    neighbors.add(getElement(i, j));
+                    if (board[i][j] != null) {
+                        neighbors.add(getElement(i, j));
+                    }
                 }
             }
         }
@@ -146,11 +139,58 @@ public class Board {
     }
 
     /*
+     * @returns string representation of the board to be printed out later
+     */
+    public String toString() {
+        String boardString ="";
+        boardString += "\\ ";
+        // Drawing X axis
+        for ( int i = 0 ; i < dimension ; i++ ) {
+            boardString += i;
+        }
+        // sets up next line
+        boardString += "\n";
+
+        /*// Drawing divider
+        for ( int i = 0 ; i < dimension + 1 ; i++ ) {
+            boardString += "-";
+        }
+        // sets up next line
+        boardString += "\n";*/
+
+        for ( int y = 0 ; y < dimension ; y++ ) {
+            boardString += y + "|";
+            for ( int x = 0 ; x < dimension ; x++ ) {
+                if ( board[x][y].isCovered() ) {
+                    boardString += "X";
+                }
+                else {
+                    if ( board[x][y].isMined() ) {
+                        boardString += "M";
+                    }
+                    else if ( board[x][y].getNeighborMines() > 0 ) {
+                        boardString += board[x][y].getNeighborMines();
+                    }
+                    else {
+                        boardString += ".";
+                    }
+                }
+            }
+            boardString += "\n";
+        }
+        return boardString;
+    }
+
+    /*
      *  @param maxValue The max integer that will be randomly generated
      *  @returns a random value from 0(inclusive) to max value(exclusive)
      */
     private int randomInt( int maxValue ) {
         Random gen = new Random();
         return gen.nextInt( maxValue );
+    }
+
+    public Element[][] getBoard() {
+        return board;
     }
 }
