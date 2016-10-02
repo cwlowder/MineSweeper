@@ -29,11 +29,15 @@ public class Element {
         return isCovered;
     }
 
-    public boolean isMine() {
+    public boolean isMined() {
         return isMine;
     }
 
-    private int numNeighborMines() {
+    public int getNeighborMines() {
         return neighborMines;
+    }
+
+    public void setNeighborMines( int numMines ) {
+        neighborMines = numMines;
     }
 }
