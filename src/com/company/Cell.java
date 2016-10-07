@@ -1,5 +1,8 @@
 package com.company;
 
+/**
+ * Created by Curtis Lowder on 10/2/2016.
+ */
 public class Cell {
     private int x;
     private int y;

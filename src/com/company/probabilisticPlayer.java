@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.TreeMap;
 
 /**
- * Created by Badtoasters on 10/7/2016.
+ * Created by Badtoasters on 10/2/2016.
  */
 public class probabilisticPlayer extends AbstractPlayer {
 
@@ -21,16 +21,16 @@ public class probabilisticPlayer extends AbstractPlayer {
      */
     @Override
     public boolean solve() {
-        while ( ! checkSolved() ) {
+        while ( ! getBoard().checkSolved() ) {
             if ( probMap.size() > 0 ) {
                 Cell lowestProb = lowestProbLocation();
                 if ( lowestProb.isMined() ) {
                     return false;
                 }
                 else {
-                    getBoard().uncoverLocation( lowestProb.getX() , lowestProb.getY() );
+                    getBoard().uncoverLocation(lowestProb.getX(), lowestProb.getY());
                     computeProbabilities();
-                    probMap.remove( lowestProb.toString() );
+                    probMap.remove(lowestProb.toString());
                 }
             }
             else {
@@ -44,7 +44,7 @@ public class probabilisticPlayer extends AbstractPlayer {
                 }
             }
         }
-        if ( checkSolved() )
+        if ( getBoard().checkSolved() )
             return true;
         else {
             return false;

@@ -3,7 +3,7 @@ package com.company;
 import java.util.Random;
 
 /**
- * Created by Badtoasters on 10/7/2016.
+ * Created by Curtis Lowder on 10/7/2016.
  */
 public abstract class AbstractPlayer {
     private Board board;
@@ -16,27 +16,6 @@ public abstract class AbstractPlayer {
      * @return a true if the board was solved, a false otherwise
      */
     public abstract boolean solve();
-
-    /**
-     *
-     * @return whether or not the board is currently solved
-     */
-    public boolean checkSolved() {
-        int numCovered = 0;
-        for ( int x = 0 ; x < dimension ; x ++ ) {
-            for ( int y = 0 ; y < dimension ; y ++ ) {
-                if ( board.getCell(x,y).isCovered() ){
-                    numCovered++;
-                }
-            }
-        }
-        if ( numCovered == numMines ) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
 
     /**
      *  @param maxValue The max integer that will be randomly generated

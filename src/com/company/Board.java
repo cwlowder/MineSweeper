@@ -2,17 +2,47 @@ package com.company;
 
 import java.util.ArrayList;
 import java.util.Random;
-
+/**
+ * Created by Curtis Lowder on 10/1/2016.
+ */
 public class Board {
     private int dimension;
     private Cell[][] board;
+    private int numMines;
 
     public Board ( int dimension , int numMines ) {
         this.dimension = dimension;
+        this.numMines = numMines;
         generateBoard( numMines );
         calcNumNeighborMines();
     }
 
+    /**
+     *
+     * @return whether or not the board is currently solved
+     */
+    public boolean checkSolved() {
+        int numCovered = 0;
+        for ( int x = 0 ; x < dimension ; x ++ ) {
+            for ( int y = 0 ; y < dimension ; y ++ ) {
+                if ( getCell(x,y).isCovered() ){
+                    numCovered++;
+                }
+            }
+        }
+        if ( numCovered == numMines ) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    /**
+     *
+     * @param x the x position to uncover
+     * @param y the y position to uncover
+     */
     public void uncoverLocation( int x , int y ) {
         board[x][y].reveal();
         ArrayList<Cell> neighbors = findNeighbors( x , y );
@@ -29,6 +59,7 @@ public class Board {
     }
 
     /**
+     *
      *  @param numMines the number of mines to be placed
      */
     private void generateBoard( int numMines ) {
@@ -52,9 +83,7 @@ public class Board {
 
     /**
      *  Doesn't place empty elements onto the board, just mines
-     *
      *  @param numMines the number of mines to be placed on the board
-     *
      */
     private void placeMines( int numMines) {
         while (numMines > 0) {
@@ -72,6 +101,9 @@ public class Board {
         }
     }
 
+    /**
+     * calculates the number of neighbor mines for each cell on the grid
+     */
     private void calcNumNeighborMines() {
         for ( int x = 0 ; x < dimension ; x++ ) {
             for ( int y = 0 ; y < dimension ; y++ ) {
@@ -92,6 +124,10 @@ public class Board {
         }
     }
 
+    /**
+     *
+     * @return the number of covered cells on the board left
+     */
     public int numCoveredCells() {
         int numCovered = 0;
         for ( int x = 0 ; x < dimension ; x++ ) {
@@ -104,12 +140,13 @@ public class Board {
         return numCovered;
     }
 
-    /*
+    /**
+     *
      *  @param x the x position of the target location to be calculated
      *  @param y the y position of the target location to be calculated
      *  @returns Array of the neighbors for the location x,y
      */
-    public ArrayList<Cell> findNeighbors(int x, int y) {
+    public ArrayList<Cell> findNeighbors( int x , int y ) {
         ArrayList<Cell> neighbors = new ArrayList<>();
 
         // Loops through possible neighbors in each of the directions
@@ -140,7 +177,13 @@ public class Board {
         return neighbors;
     }
 
-    public Cell getCell(int x , int y ) {
+    /**
+     *
+     * @param x the x position of the cell to return
+     * @param y the y position of the cell to return
+     * @return the cell which matches the x,y position
+     */
+    public Cell getCell( int x , int y ) {
         if ( x >= 0 && y >= 0 ) {
             if ( x < dimension && y < dimension ) {
                 return board[x][y];
@@ -150,6 +193,7 @@ public class Board {
     }
 
     /**
+     *
      * @returns string representation of the board to be printed out later
      */
     public String toString() {
@@ -162,15 +206,9 @@ public class Board {
         // sets up next line
         boardString += "\n";
 
-        /*// Drawing divider
-        for ( int i = 0 ; i < dimension + 1 ; i++ ) {
-            boardString += "-";
-        }
-        // sets up next line
-        boardString += "\n";*/
-
         for ( int y = 0 ; y < dimension ; y++ ) {
             boardString += y + "|";
+            // running through the elements on a line
             for ( int x = 0 ; x < dimension ; x++ ) {
                 if ( board[x][y].isCovered() ) {
                     boardString += "X";
@@ -201,10 +239,19 @@ public class Board {
         return gen.nextInt( maxValue );
     }
 
+    /**
+     *
+     * @return a 2d array of the cells which represent the board
+     */
     public Cell[][] getBoard() {
         return board;
     }
 
+    /**
+     *
+     * @param cellStr the string representation of the target cell
+     * @return the cell object correlated with that cellStr
+     */
     public Cell getCellStr(String cellStr) {
         String[] coords= cellStr.split(",");
         return getCell( Integer.parseInt( coords[0] ) , Integer.parseInt( coords[1] ) );

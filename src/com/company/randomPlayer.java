@@ -1,7 +1,7 @@
 package com.company;
 
 /**
- * Created by Badtoasters on 10/7/2016.
+ * Created by Curtis Lowder on 10/7/2016.
  */
 public class randomPlayer extends AbstractPlayer {
 
@@ -16,7 +16,7 @@ public class randomPlayer extends AbstractPlayer {
      */
     @Override
     public boolean solve() {
-        while ( ! checkSolved() ) {
+        while ( ! getBoard().checkSolved() ) {
             int xPos = randomInt( getDimension() );
             int yPos = randomInt( getDimension() );
             if ( getBoard().getCell( xPos , yPos ).isCovered() ) {
@@ -28,7 +28,7 @@ public class randomPlayer extends AbstractPlayer {
             }
         }
 
-        if ( checkSolved() ) {
+        if ( getBoard().checkSolved() ) {
             return true;
         }
         else {
