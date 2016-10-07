@@ -2,6 +2,7 @@ package com.company;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.SyncFailedException;
 
 public class Main {
     public static int test0 = 0;
@@ -10,14 +11,12 @@ public class Main {
     public static void main(String[] args) {
         int dimension = getValueConsole( "What dimension should the board be?" , Integer.MAX_VALUE );
         int numMines = getValueConsole( "How many mines should be placed?" , dimension*dimension );
-        //Board board = new Board(dimension, numMines);
-        //System.out.println(board.toString());
 
-        //for ( int i = 0 ; i <= numMines ; i++ ) {
-           // System.out.println( "NUM MINES:" +i );
-            playAI(dimension, numMines );
-       // }
+        Long startTime = System.currentTimeMillis();
+        playAI(dimension, numMines );
+        Long endTime = System.currentTimeMillis();
 
+        System.out.println( "time passed(millisec):" + ( endTime - startTime ) );
 
         /*
         Board board = new Board(dimension, numMines);
@@ -28,7 +27,8 @@ public class Main {
             board.uncoverLocation( xPos , yPos );
 
             System.out.println(board.toString());
-        }*/
+        }
+        */
     }
 
     private static void playAI(int dimension, int numMines) {
@@ -38,8 +38,8 @@ public class Main {
         for ( int i = 0 ; i < numTrails ; i++ ) {
             //System.out.println( "TRIAL:" + i );
             Board board = new Board( dimension , numMines );
-            AbstractPlayer player = new probabilisticPlayer( board , numMines );
-            //AbstractPlayer player = new randomPlayer( board , numMines );
+            //AbstractPlayer player = new probabilisticPlayer( board , numMines );
+            AbstractPlayer player = new randomPlayer( board , numMines );
 
             boolean isSolved = player.solve();
 
