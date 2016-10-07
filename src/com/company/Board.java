@@ -2,6 +2,7 @@ package com.company;
 
 import java.util.ArrayList;
 import java.util.Random;
+
 /**
  * Created by Curtis Lowder on 10/1/2016.
  */
@@ -9,12 +10,14 @@ public class Board {
     private int dimension;
     private Cell[][] board;
     private int numMines;
+    private boolean firstClick;
 
     public Board ( int dimension , int numMines ) {
         this.dimension = dimension;
         this.numMines = numMines;
         generateBoard( numMines );
         calcNumNeighborMines();
+        firstClick = true;
     }
 
     /**
@@ -44,11 +47,16 @@ public class Board {
      * @param y the y position to uncover
      */
     public void uncoverLocation( int x , int y ) {
+
+        /*
+         * Handling the fact your first click can never be a mine
+         * Reasoning behind this implementation can be found here: http://www.techuser.net/mineclick.html
+         */
         board[x][y].reveal();
-        ArrayList<Cell> neighbors = findNeighbors( x , y );
+        ArrayList<Cell> neighbors = findNeighbors(x, y);
 
         // only empty cells should reveal neighbor cells
-        if ( board[x][y].getNeighborMines() == 0 ) {
+        if (board[x][y].getNeighborMines() == 0) {
             for (Cell neighbor : neighbors) {
                 // reveals neighbors that are covered and not mines
                 if (neighbor.isCovered() && !neighbor.isMined()) {
@@ -168,7 +176,9 @@ public class Board {
 
                 if ( shouldAdd ) {
                     if (board[i][j] != null) {
-                        neighbors.add(getCell(i, j));
+                        if ( getCell( i , j ) != null ) {
+                            neighbors.add( getCell(i, j) );
+                        }
                     }
                 }
             }
@@ -255,5 +265,49 @@ public class Board {
     public Cell getCellStr(String cellStr) {
         String[] coords= cellStr.split(",");
         return getCell( Integer.parseInt( coords[0] ) , Integer.parseInt( coords[1] ) );
+    }
+
+    /**
+     * Note: this method handles if the first spot dug is a mine as specified: http://www.techuser.net/mineclick.html
+     * @param x the x position to be dug
+     * @param y the y position to be dug
+     * @return the whether digging a spot will kill you
+     */
+    public boolean isDangerous(int x, int y) {
+        if ( firstClick && getCell( x , y ).isMined() ) {
+            moveMineSafelyAway( x , y);
+            firstClick = false;
+            return false;
+        }
+        else if ( getCell( x , y ).isMined() ) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    /**
+     * This method should only be used on the first click of the game
+     * @param xPos the x position of the mine to move
+     * @param yPos the y position of the mine to move
+     */
+    private void moveMineSafelyAway( int xPos, int yPos ) {
+        boolean isMoved = false;
+
+        // finds first open spot with no mine
+        for ( int x = 0 ; x < dimension ; x++ ) {
+            for ( int y = 0 ; y < dimension ; y++ ) {
+                if ( x != xPos && y != yPos && ! isMoved ) {
+                    if ( ! getCell(x, y).isMined() ) {
+                        board[x][y] = new Cell( xPos , yPos , true);
+                        board[xPos][yPos] = new Cell( x , y , false);
+                        isMoved = true;
+                    }
+                }
+            }
+        }
+        // makes sure the neighbor mines is calculated correctly
+        calcNumNeighborMines();
     }
 }

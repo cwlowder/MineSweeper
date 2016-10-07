@@ -6,11 +6,11 @@ import java.util.TreeMap;
 /**
  * Created by Badtoasters on 10/2/2016.
  */
-public class probabilisticPlayer extends AbstractPlayer {
+public class ProbabilisticPlayer extends AbstractPlayer {
 
     private TreeMap< String , Double > probMap = new TreeMap<>();
 
-    public probabilisticPlayer(Board board , int numMines ) {
+    public ProbabilisticPlayer(Board board , int numMines ) {
         setBoard( board );
         setDimension( board.getBoard().length );
         setNumMines( numMines );
@@ -24,7 +24,7 @@ public class probabilisticPlayer extends AbstractPlayer {
         while ( ! getBoard().checkSolved() ) {
             if ( probMap.size() > 0 ) {
                 Cell lowestProb = lowestProbLocation();
-                if ( lowestProb.isMined() ) {
+                if ( getBoard().isDangerous( lowestProb.getX() , lowestProb.getY() ) ) {
                     return false;
                 }
                 else {
@@ -35,7 +35,7 @@ public class probabilisticPlayer extends AbstractPlayer {
             }
             else {
                 Cell randomLocation = randomLocation();
-                if ( randomLocation.isMined() ) {
+                if ( getBoard().isDangerous( randomLocation.getX() , randomLocation.getY() ) ) {
                     return false;
                 }
                 else {

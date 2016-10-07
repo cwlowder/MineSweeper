@@ -20,7 +20,7 @@ public class RandomPlayer extends AbstractPlayer {
             int xPos = randomInt( getDimension() );
             int yPos = randomInt( getDimension() );
             if ( getBoard().getCell( xPos , yPos ).isCovered() ) {
-                if ( getBoard().isDangerous( xPos , yPos ) ) {
+                if ( getBoard().getCell(xPos, yPos).isMined() ) {
                     return false;
                 } else {
                     getBoard().uncoverLocation(xPos, yPos);

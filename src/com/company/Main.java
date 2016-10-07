@@ -8,21 +8,20 @@ import java.io.InputStreamReader;
  */
 public class Main {
     private static final int MAXDIMENSION = 77;
+    private static final boolean SHOULDAIPLAY = true;
+
     public static void main(String[] args) {
         // After a dimension of 77 the program will crash due to StackOverflowError
         int dimension = getValueConsole( "What dimension should the board be?" , MAXDIMENSION );
         int numMines = getValueConsole( "How many mines should be placed?" , dimension*dimension );
         int numTrails = getValueConsole( "How many trails of the AIs should be run?" , Integer.MAX_VALUE );
 
-        boolean shouldPlayAI = true;
-
-        if ( shouldPlayAI ) {
+        if ( SHOULDAIPLAY ) {
             System.out.println("Probabilistic Model:");
             Long startTime = System.currentTimeMillis();
             playAIProbabilistic(dimension, numMines, numTrails);
             Long endTime = System.currentTimeMillis();
             System.out.println("time passed(millisec):" + (endTime - startTime));
-
 
             System.out.println("Random Model:");
             startTime = System.currentTimeMillis();
@@ -48,18 +47,18 @@ public class Main {
 
             board.uncoverLocation(xPos, yPos);
 
-            System.out.println(board.toString());
-
-            if ( board.getCell( xPos , yPos ).isMined() ) {
+            if ( board.isDangerous( xPos, yPos) ) {
                 System.out.println("Boom! You have exploded");
                 return;
             }
+
+            System.out.println(board.toString());
         }
         System.out.println("Congratulations! you have won the game!");
     }
 
     /**
-     * plays a number of trails using the probabilisticPlayer class
+     * plays a number of trails using the ProbabilisticPlayer class
      * prints out the success rate afterwards
      * also prints out the progress of the AI
      * @param dimension dimension for the board to be tested
@@ -73,7 +72,7 @@ public class Main {
             System.out.print("\rProgress:" + 100 * ( (float) i / (float) numTrails) + "%");
 
             Board board = new Board( dimension , numMines );
-            AbstractPlayer player = new probabilisticPlayer( board , numMines );
+            AbstractPlayer player = new ProbabilisticPlayer( board , numMines );
 
             boolean isSolved = player.solve();
 
@@ -87,7 +86,7 @@ public class Main {
     }
 
     /**
-     * plays a number of trails using the randomPlayer class
+     * plays a number of trails using the RandomPlayer class
      * prints out the success rate afterwards
      * also prints out the progress of the AI
      * @param dimension dimension for the board to be tested
@@ -101,7 +100,7 @@ public class Main {
             System.out.print("\rProgress:" + 100 * ( (float) i / (float) numTrails) + "%");
 
             Board board = new Board( dimension , numMines );
-            AbstractPlayer player = new randomPlayer( board , numMines );
+            AbstractPlayer player = new RandomPlayer( board , numMines );
 
             boolean isSolved = player.solve();
 
