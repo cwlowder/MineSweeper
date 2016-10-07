@@ -12,6 +12,7 @@ public class RandomPlayer extends AbstractPlayer {
     }
 
     /**
+     * this algorithm simply picks random cells on the board until either winning or loosing
      * @return a true if the board was solved, a false otherwise
      */
     @Override
