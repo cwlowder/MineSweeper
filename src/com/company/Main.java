@@ -1,9 +1,6 @@
 package com.company;
 
-import org.omg.Messaging.SYNC_WITH_TRANSPORT;
-
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class Main {
@@ -16,24 +13,12 @@ public class Main {
         //Board board = new Board(dimension, numMines);
         //System.out.println(board.toString());
 
-        int numWins = 0;
-        int numTrails = 100000;
+        //for ( int i = 0 ; i <= numMines ; i++ ) {
+           // System.out.println( "NUM MINES:" +i );
+            playAI(dimension, numMines );
+       // }
 
-        for ( int i = 0 ; i < numTrails ; i++ ) {
-            System.out.println( "TRIAL:" + i );
-            Board board = new Board( dimension , numMines );
-            Solver solve = new Solver( board , numMines );
 
-            //boolean isSolved = solve.randomlySolve();//.solve();
-            boolean isSolved = solve.solve();
-
-            if ( isSolved ) {
-                numWins++;
-            }
-        }
-        System.out.println( "WINS: " + numWins + "/" + numTrails );
-        System.out.println( "WIN%: " + 100*( (float) numWins / (float) numTrails) + "%" );
-        System.out.println( "Prob:" +test0 +" Random:"+test1 + " NoSolution:"+test2);
         /*
         Board board = new Board(dimension, numMines);
         while (true) {
@@ -44,6 +29,26 @@ public class Main {
 
             System.out.println(board.toString());
         }*/
+    }
+
+    private static void playAI(int dimension, int numMines) {
+        int numWins = 0;
+        int numTrails = 100000;
+
+        for ( int i = 0 ; i < numTrails ; i++ ) {
+            //System.out.println( "TRIAL:" + i );
+            Board board = new Board( dimension , numMines );
+            AbstractPlayer player = new probabilisticPlayer( board , numMines );
+            //AbstractPlayer player = new randomPlayer( board , numMines );
+
+            boolean isSolved = player.solve();
+
+            if ( isSolved ) {
+                numWins++;
+            }
+        }
+        System.out.println( "WINS: " + numWins + "/" + numTrails );
+        System.out.println( "WIN%: " + 100*( (float) numWins / (float) numTrails) + "%" );
     }
 
     private static int getValueConsole( String Message , int max ) {

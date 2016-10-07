@@ -28,8 +28,7 @@ public class Board {
         }
     }
 
-    /*
-     *  @param dimension the dimensions of the board
+    /**
      *  @param numMines the number of mines to be placed
      */
     private void generateBoard( int numMines ) {
@@ -51,7 +50,7 @@ public class Board {
         }
     }
 
-    /*
+    /**
      *  Doesn't place empty elements onto the board, just mines
      *
      *  @param numMines the number of mines to be placed on the board
@@ -150,7 +149,7 @@ public class Board {
         return null;
     }
 
-    /*
+    /**
      * @returns string representation of the board to be printed out later
      */
     public String toString() {
@@ -193,7 +192,7 @@ public class Board {
         return boardString;
     }
 
-    /*
+    /**
      *  @param maxValue The max integer that will be randomly generated
      *  @returns a random value from 0(inclusive) to max value(exclusive)
      */

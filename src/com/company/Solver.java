@@ -18,7 +18,7 @@ public class Solver {
         this.board = board;
         this.numMines = numMines;
     }
-
+    /*
     public boolean solve() {
         ArrayList<String> likelyMines = new ArrayList<>();
         while ( ! checkSolved() ) {
@@ -161,22 +161,6 @@ public class Solver {
         return smallestProbCell;
     }
 
-    public boolean checkSolved() {
-        int numCovered = 0;
-        for ( int x = 0 ; x < dimension ; x ++ ) {
-            for ( int y = 0 ; y < dimension ; y ++ ) {
-                if ( board.getCell(x,y).isCovered() ){
-                    numCovered++;
-                }
-            }
-        }
-        if ( numCovered == numMines ) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
 
     /*
      *  @param maxValue The max integer that will be randomly generated
