@@ -12,6 +12,7 @@ public class RandomPlayer extends AbstractPlayer {
     }
 
     /**
+     * this algorithm simply picks random cells on the board until either winning or loosing
      * @return a true if the board was solved, a false otherwise
      */
     @Override
@@ -20,7 +21,7 @@ public class RandomPlayer extends AbstractPlayer {
             int xPos = randomInt( getDimension() );
             int yPos = randomInt( getDimension() );
             if ( getBoard().getCell( xPos , yPos ).isCovered() ) {
-                if ( getBoard().getCell(xPos, yPos).isMined() ) {
+                if ( getBoard().isDangerous( xPos , yPos ) ) {
                     return false;
                 } else {
                     getBoard().uncoverLocation(xPos, yPos);
