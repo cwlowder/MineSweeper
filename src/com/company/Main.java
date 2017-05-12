@@ -142,7 +142,7 @@ public class Main {
                 in = bufferedReader.readLine();
                 value = Integer.parseInt(in);
             } catch (Exception e) {
-                System.out.println( "Sorry, please enter a valid positive integer.");
+                System.out.println( "Sorry, please enter a valid positive integer less than " + max + ".");
                 continue;
             }
 
