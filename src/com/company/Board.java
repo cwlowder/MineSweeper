@@ -213,6 +213,7 @@ public class Board {
         // Drawing X axis
         // checking if the dimension is too large to fit in one row
         if(dimension > 10) {
+            boardString += " ";
             for ( int i = 0 ; i < dimension ; i++ ) {
                 // only draw first digit if not 0
                 if(i/10!=0) {
@@ -225,7 +226,7 @@ public class Board {
                 }
             }
             // sets up next line, blank space needed to help align
-            boardString += "\n \\";
+            boardString += "\n \\ ";
         }
         for ( int i = 0 ; i < dimension ; i++ ) {
             // modulus i by 10 to get last digit
@@ -235,6 +236,10 @@ public class Board {
         boardString += "\n";
 
         for ( int y = 0 ; y < dimension ; y++ ) {
+            // checks if a blank space should be added to align columns
+            if(dimension > 10 && y < 10 ) {
+                boardString += " ";
+            }
             boardString += y + "|";
             // running through the elements on a line
             for ( int x = 0 ; x < dimension ; x++ ) {
