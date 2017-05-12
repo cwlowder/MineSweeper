@@ -1,22 +1,33 @@
-MineSweeperTopHatter
-by Curtis Lowder
-
-Description:
-    This is my submission for the Top Hatter Mine Sweeper problem. It is designed to solve a MineSweeper game.
+MineSweeper
+    by Curtis Lowder
 
 How to run:
     To run the code, run the main command in the Main class.
     Note: the default configuration will run the AI players only.
         if you want to run the code in a mode that will allow a human to play,
-         change the variable in the Main class SHOULDAIPLAY from TRUE to FALSE
+            Answer no to the prompt of should run
+        Running the code under AI control will run two major parts to the code:
+            the probabilistic and random AI.
+        Playing as a human is only meant for testing purposes
+    The probabilisticPlayer is the main focus of this program.
+    The randomPlayer is only meant as a control to compare performance.
 
 
-Running the code with SHOULDAIPLAY set to true will run two major parts to the code: the probabilistic and random AI.
-The probabilisticPlayer is the main focus of this program. The randomPlayer is only meant as a control to compare performance.
+Algorithm for probabilityPlayer:
+    The algorithm in this code simply assigns a probability to each of the neighbors of an uncovered and numbered cell.
+    Dividing the number of mined cells / number of covered cells, calculates the probability of each of a cells
+    neighbors being a mine. After all the uncovered and numbered cells have their neighbor's probabilities calculated,
+    the algorithm uncovers the lowest probability cell. If no probabilities are known for any of
+    the cells, the algorithm picks a random covered cell, and uncovers it. This algorithm repeats until either the board
+    is solved, or a mine has been hit.
+
 
 Contact information:
-clowder2@illinois.edu
+    clowder2@illinois.edu
 
 Some interesting information considered in this code:
     http://www.techuser.net/mineclick.html
-    basically, the technique the original MineSweeper used to make sure your first click was never a bomb
+        basically, the technique the original MineSweeper used to make sure your first click was never a bomb
+
+    https://en.wikipedia.org/wiki/Microsoft_Minesweeper
+        rules for the game
