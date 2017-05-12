@@ -33,7 +33,7 @@ public class Colorer {
             case 8:
                 return ANSI_GREY + number + ANSI_RESET;
             default:
-                return ANSI_BLUE + number + ANSI_RESET;
+                return ""+number;
         }
     }
 }
