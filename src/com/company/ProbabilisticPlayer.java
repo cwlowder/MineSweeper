@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.TreeMap;
 
 /**
- * Created by Badtoasters on 10/2/2016.
+ * Created by Curtis Lowder on 10/2/2016.
  */
 public class ProbabilisticPlayer extends AbstractPlayer {
 

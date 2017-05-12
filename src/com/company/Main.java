@@ -8,53 +8,39 @@ import java.io.InputStreamReader;
  */
 public class Main {
     private static final int MAXDIMENSION = 77;
-    private static final boolean SHOULDAIPLAY = true;
+    private static final String YES = "YES";
+    private static final String NO = "NO";
 
     public static void main(String[] args) {
+        boolean aiPlay = getYesNoConsole("Should AI play(YES/NO)?");
+
         // After a dimension of 77 the program will crash due to StackOverflowError
         int dimension = getValueConsole( "What dimension should the board be?" , MAXDIMENSION );
         int numMines = getValueConsole( "How many mines should be placed?" , dimension*dimension );
-        int numTrails = getValueConsole( "How many trails of the AIs should be run?" , Integer.MAX_VALUE );
 
-        if ( SHOULDAIPLAY ) {
+        if ( aiPlay ) {
+            int numTrails = getValueConsole( "How many trails of the AIs should be run?" , Integer.MAX_VALUE );
+
+            // probabilistic model
             System.out.println("Probabilistic Model:");
             Long startTime = System.currentTimeMillis();
-            playAIProbabilistic(dimension, numMines, numTrails);
+            trailRunAIProbabilistic(dimension, numMines, numTrails);
             Long endTime = System.currentTimeMillis();
             System.out.println("time passed(millisec):" + (endTime - startTime));
 
+            // Separator
+            System.out.println("------------");
+
+            // random model
             System.out.println("Random Model:");
             startTime = System.currentTimeMillis();
-            playAIRandom(dimension, numMines, numTrails);
+            trailRunAIRandom(dimension, numMines, numTrails);
             endTime = System.currentTimeMillis();
             System.out.println("time passed(millisec):" + (endTime - startTime));
         }
         else {
             playHuman(dimension, numMines);
         }
-    }
-
-    /**
-     * This allows a human to play the game of MineSweeper
-     * @param dimension dimension for the board to be used
-     * @param numMines number of mines to be placed on board
-     */
-    private static void playHuman(int dimension, int numMines) {
-        Board board = new Board(dimension, numMines);
-        while ( ! board.checkSolved() ) {
-            int xPos = getValueConsole("What X position should be digged?", dimension - 1);
-            int yPos = getValueConsole("What Y position should be digged?", dimension - 1);
-
-            board.uncoverLocation(xPos, yPos);
-
-            if ( board.isDangerous( xPos, yPos) ) {
-                System.out.println("Boom! You have exploded");
-                return;
-            }
-
-            System.out.println(board.toString());
-        }
-        System.out.println("Congratulations! you have won the game!");
     }
 
     /**
@@ -65,7 +51,7 @@ public class Main {
      * @param numMines the number of mines to place on the board
      * @param numTrails the number of trails that should be done
      */
-    private static void playAIProbabilistic(int dimension, int numMines, int numTrails) {
+    private static void trailRunAIProbabilistic(int dimension, int numMines, int numTrails) {
         int numWins = 0;
 
         for ( int i = 0 ; i < numTrails ; i++ ) {
@@ -93,7 +79,7 @@ public class Main {
      * @param numMines the number of mines to place on the board
      * @param numTrails the number of trails that should be done
      */
-    private static void playAIRandom(int dimension, int numMines, int numTrails) {
+    private static void trailRunAIRandom(int dimension, int numMines, int numTrails) {
         int numWins = 0;
 
         for ( int i = 0 ; i < numTrails ; i++ ) {
@@ -111,6 +97,30 @@ public class Main {
         System.out.println("\rDone!");
         System.out.println( "WINS: " + numWins + "/" + numTrails );
         System.out.println( "WIN%: " + 100*( (float) numWins / (float) numTrails) + "%" );
+    }
+
+    /**
+     * This allows a human to play the game of MineSweeper
+     * @param dimension dimension for the board to be used
+     * @param numMines number of mines to be placed on board
+     */
+    private static void playHuman(int dimension, int numMines) {
+        Board board = new Board(dimension, numMines);
+        while ( ! board.checkSolved() ) {
+            int xPos = getValueConsole("What X position should be digged?", dimension - 1);
+            int yPos = getValueConsole("What Y position should be digged?", dimension - 1);
+
+
+            if ( board.isDangerous( xPos, yPos) ) {
+                System.out.println("Boom! You have exploded");
+                return;
+            }
+
+            board.uncoverLocation(xPos, yPos);
+
+            System.out.println(board.toString());
+        }
+        System.out.println("Congratulations! you have won the game!");
     }
 
     /**
@@ -145,5 +155,39 @@ public class Main {
             }
         }
         return value;
+    }
+
+    /**
+     *
+     * @param message the message to be displayed
+     * @return a boolean answering the question in the message
+     */
+    private static boolean getYesNoConsole(String message) {
+        BufferedReader bufferedReader = new BufferedReader( new InputStreamReader( System.in ) );
+        boolean badInput = true;
+
+        while ( badInput ) {
+            System.out.println(message);
+            String in = null;
+
+            try {
+                in = bufferedReader.readLine();
+            } catch (Exception e) {
+                System.out.println( "Sorry, please enter either yes or no.");
+                continue;
+            }
+
+            if ( in.equalsIgnoreCase(YES) ) {
+                return true;
+            }
+            else if ( in.equalsIgnoreCase(NO) ){
+                return false;
+            }
+            else {
+                System.out.println( "Sorry, please enter a valid positive integer" );
+                badInput = true;
+            }
+        }
+        return false;
     }
 }
