@@ -211,8 +211,25 @@ public class Board {
         String boardString ="";
         boardString += "\\ ";
         // Drawing X axis
+        // checking if the dimension is too large to fit in one row
+        if(dimension > 10) {
+            for ( int i = 0 ; i < dimension ; i++ ) {
+                // only draw first digit if not 0
+                if(i/10!=0) {
+                    // divide by ten to get first digit
+                    boardString += i/10;
+                }
+                // otherwise add blank space
+                else {
+                    boardString += " ";
+                }
+            }
+            // sets up next line, blank space needed to help align
+            boardString += "\n \\";
+        }
         for ( int i = 0 ; i < dimension ; i++ ) {
-            boardString += i;
+            // modulus i by 10 to get last digit
+            boardString += i%10;
         }
         // sets up next line
         boardString += "\n";
