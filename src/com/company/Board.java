@@ -1,5 +1,6 @@
 package com.company;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -228,7 +229,7 @@ public class Board {
                         boardString += "M";
                     }
                     else if ( board[x][y].getNeighborMines() > 0 ) {
-                        boardString += board[x][y].getNeighborMines();
+                        boardString += Colorer.color(board[x][y].getNeighborMines());
                     }
                     else {
                         boardString += ".";
