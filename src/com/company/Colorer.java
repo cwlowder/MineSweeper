@@ -12,7 +12,7 @@ public class Colorer {
     public static final String ANSI_BLUE = "\u001B[34m";
     public static final String ANSI_PURPLE = "\u001B[35m";
     public static final String ANSI_CYAN = "\u001B[36m";
-    public static final String ANSI_WHITE = "\u001B[37m";
+    public static final String ANSI_LIGHT_BLUE = "\u001B[94m";
 
     public static String color(int number) {
         switch (number) {
@@ -29,7 +29,7 @@ public class Colorer {
             case 6:
                 return ANSI_CYAN + number + ANSI_RESET;
             case 7:
-                return ANSI_WHITE + number + ANSI_RESET;
+                return ANSI_LIGHT_BLUE + number + ANSI_RESET;
             case 8:
                 return ANSI_GREY + number + ANSI_RESET;
             default:
