@@ -5,8 +5,8 @@ How to run:
     To run the code, run the main command in the Main class.
     Note: the default configuration will run the AI players only.
         if you want to run the code in a mode that will allow a human to play,
-            change the variable in the Main class SHOULDAIPLAY from TRUE to FALSE
-        Running the code with SHOULDAIPLAY set to true will run two major parts to the code:
+            Answer no to the prompt of should run
+        Running the code under AI control will run two major parts to the code:
             the probabilistic and random AI.
         Playing as a human is only meant for testing purposes
     The probabilisticPlayer is the main focus of this program.
@@ -19,7 +19,7 @@ Algorithm for probabilityPlayer:
     neighbors being a mine. After all the uncovered and numbered cells have their neighbor's probabilities calculated,
     the algorithm uncovers the lowest probability cell. If no probabilities are known for any of
     the cells, the algorithm picks a random covered cell, and uncovers it. This algorithm repeats until either the board
-    is solved, or a mine has been uncovered.
+    is solved, or a mine has been hit.
 
 
 Contact information:
