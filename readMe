@@ -1,0 +1,22 @@
+MineSweeperTopHatter
+by Curtis Lowder
+
+Description:
+    This is my submission for the Top Hatter Mine Sweeper problem. It is designed to solve a MineSweeper game.
+
+How to run:
+    To run the code, run the main command in the Main class.
+    Note: the default configuration will run the AI players only.
+        if you want to run the code in a mode that will allow a human to play,
+         change the variable in the Main class SHOULDAIPLAY from TRUE to FALSE
+
+
+Running the code with SHOULDAIPLAY set to true will run two major parts to the code: the probabilistic and random AI.
+The probabilisticPlayer is the main focus of this program. The randomPlayer is only meant as a control to compare performance.
+
+Contact information:
+clowder2@illinois.edu
+
+Some interesting information considered in this code:
+    http://www.techuser.net/mineclick.html
+    basically, the technique the original MineSweeper used to make sure your first click was never a bomb
