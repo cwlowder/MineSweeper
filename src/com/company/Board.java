@@ -1,5 +1,6 @@
 package com.company;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -210,13 +211,35 @@ public class Board {
         String boardString ="";
         boardString += "\\ ";
         // Drawing X axis
+        // checking if the dimension is too large to fit in one row
+        if(dimension > 10) {
+            boardString += " ";
+            for ( int i = 0 ; i < dimension ; i++ ) {
+                // only draw first digit if not 0
+                if(i/10!=0) {
+                    // divide by ten to get first digit
+                    boardString += i/10;
+                }
+                // otherwise add blank space
+                else {
+                    boardString += " ";
+                }
+            }
+            // sets up next line, blank space needed to help align
+            boardString += "\n \\ ";
+        }
         for ( int i = 0 ; i < dimension ; i++ ) {
-            boardString += i;
+            // modulus i by 10 to get last digit
+            boardString += i%10;
         }
         // sets up next line
         boardString += "\n";
 
         for ( int y = 0 ; y < dimension ; y++ ) {
+            // checks if a blank space should be added to align columns
+            if(dimension > 10 && y < 10 ) {
+                boardString += " ";
+            }
             boardString += y + "|";
             // running through the elements on a line
             for ( int x = 0 ; x < dimension ; x++ ) {
@@ -228,7 +251,7 @@ public class Board {
                         boardString += "M";
                     }
                     else if ( board[x][y].getNeighborMines() > 0 ) {
-                        boardString += board[x][y].getNeighborMines();
+                        boardString += Colorer.color(board[x][y].getNeighborMines());
                     }
                     else {
                         boardString += ".";

@@ -7,14 +7,14 @@ import java.io.InputStreamReader;
  * Created by Curtis Lowder on 10/2/2016.
  */
 public class Main {
+    // After a dimension of 77 the program will crash due to StackOverflowError
     private static final int MAXDIMENSION = 77;
     private static final String YES = "YES";
     private static final String NO = "NO";
 
     public static void main(String[] args) {
         boolean aiPlay = getYesNoConsole("Should AI play(YES/NO)?");
-
-        // After a dimension of 77 the program will crash due to StackOverflowError
+        
         int dimension = getValueConsole( "What dimension should the board be?" , MAXDIMENSION );
         int numMines = getValueConsole( "How many mines should be placed?" , dimension*dimension );
 
@@ -142,7 +142,7 @@ public class Main {
                 in = bufferedReader.readLine();
                 value = Integer.parseInt(in);
             } catch (Exception e) {
-                System.out.println( "Sorry, please enter a valid positive integer.");
+                System.out.println( "Sorry, please enter a valid positive integer less than " + max + ".");
                 continue;
             }
 
