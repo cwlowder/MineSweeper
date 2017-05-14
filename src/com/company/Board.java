@@ -180,12 +180,7 @@ public class Board {
      */
     public ArrayList<Cell> findNeighbors( int x , int y ) {
         ArrayList<Cell> neighbors = new ArrayList<>();
-
-        // if the board has not been generated yet
-        if(firstClick) {
-            return neighbors;
-        }
-
+        
         // Loops through possible neighbors in each of the directions
         for ( int i = x - 1 ; i <= x + 1 ; i ++ ) {
             for ( int j = y - 1 ; j <= y + 1 ; j ++ ) {
