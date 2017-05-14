@@ -181,6 +181,11 @@ public class Board {
     public ArrayList<Cell> findNeighbors( int x , int y ) {
         ArrayList<Cell> neighbors = new ArrayList<>();
 
+        // if the board has not been generated yet
+        if(firstClick) {
+            return neighbors;
+        }
+
         // Loops through possible neighbors in each of the directions
         for ( int i = x - 1 ; i <= x + 1 ; i ++ ) {
             for ( int j = y - 1 ; j <= y + 1 ; j ++ ) {
@@ -359,14 +364,18 @@ public class Board {
     }
 
     /**
-     *
+     * note: will always return true if the board has not been generated
      * @param x the x position to be dug
      * @param y the y position to be dug
      * @return the whether digging a spot will kill you
      */
     public boolean isDangerous(int x, int y) {
         boolean ret;
-        if ( getCellSpecific( x , y ).isMined() ) {
+        if( firstClick ) {
+            // if the board has not been generated yet
+            ret = true;
+        }
+        else if ( getCellSpecific( x , y ).isMined() ) {
             ret = true;
         }
         else {
