@@ -14,8 +14,9 @@ public class Colorer {
     public static final String ANSI_PURPLE = "\u001B[35m";
     public static final String ANSI_CYAN = "\u001B[36m";
     public static final String ANSI_LIGHT_BLUE = "\u001B[94m";
+    public static final String ANSI_WHITE = "\u001B[37m";
 
-    public static final String ANSI_WHITE_BACKGROUND = "\u001B[47m";
+    public static final String ANSI_RED_BACKGROUND = "\u001B[41m";
 
     /**
      *
@@ -51,6 +52,6 @@ public class Colorer {
      * @return the highlighted string representation of the string
      */
     public static String highlight(String item) {
-        return ANSI_RED + item + ANSI_RESET;
+        return ANSI_RED_BACKGROUND + ANSI_WHITE + item + ANSI_RESET;
     }
 }
