@@ -3,6 +3,7 @@ package com.company;
 /**
  * Created by Badtoasters on 5/12/2017.
  */
+
 public class Colorer {
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_GREY = "\u001B[37m";
@@ -14,6 +15,13 @@ public class Colorer {
     public static final String ANSI_CYAN = "\u001B[36m";
     public static final String ANSI_LIGHT_BLUE = "\u001B[94m";
 
+    public static final String ANSI_WHITE_BACKGROUND = "\u001B[47m";
+
+    /**
+     *
+     * @param number number to be colored
+     * @return the colored string of the integer
+     */
     public static String color(int number) {
         switch (number) {
             case 1:
@@ -35,5 +43,14 @@ public class Colorer {
             default:
                 return ""+number;
         }
+    }
+
+    /**
+     *
+     * @param item number to be highlighted
+     * @return the highlighted string representation of the string
+     */
+    public static String highlight(String item) {
+        return ANSI_RED + item + ANSI_RESET;
     }
 }

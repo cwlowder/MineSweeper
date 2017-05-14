@@ -110,15 +110,15 @@ public class Main {
             int xPos = getValueConsole("What X position should be digged?", dimension - 1);
             int yPos = getValueConsole("What Y position should be digged?", dimension - 1);
 
+            board.uncoverLocation(xPos, yPos);
 
             if ( board.isDangerous( xPos, yPos) ) {
                 System.out.println("Boom! You have exploded");
+                System.out.println(board.stringFail());
                 return;
             }
 
-            board.uncoverLocation(xPos, yPos);
-
-            System.out.println(board.toString());
+            System.out.println(board);
         }
         System.out.println("Congratulations! you have won the game!");
     }
