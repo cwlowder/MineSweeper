@@ -204,10 +204,12 @@ public class Board {
     }
 
     /**
-     *
-     * @returns string representation of the board to be printed out later
+     * Helper function for printing out board
+     * X and Y used if a mine has been hit
+     * @param drawMines should mines be drawn?
+     * @return a string representation of the board with the x, y position highlighted
      */
-    public String toString() {
+    private String getBoardString(boolean drawMines) {
         String boardString ="";
         boardString += "\\ ";
         // Drawing X axis
@@ -243,12 +245,18 @@ public class Board {
             boardString += y + "|";
             // running through the elements on a line
             for ( int x = 0 ; x < dimension ; x++ ) {
-                if ( board[x][y].isCovered() ) {
-                    boardString += "X";
+                if ( getCell(x,y).isCovered() ) {
+                    if( drawMines && getCell(x, y).isMined() ) {
+                        boardString += "M";
+                    }
+                    else {
+                        boardString += "X";
+                    }
                 }
                 else {
-                    if ( board[x][y].isMined() ) {
-                        boardString += "M";
+                    if ( drawMines && board[x][y].isMined() ) {
+                        // is highlighted because this position has an exploded mine
+                        boardString += Colorer.highlight("M");
                     }
                     else if ( board[x][y].getNeighborMines() > 0 ) {
                         boardString += Colorer.color(board[x][y].getNeighborMines());
@@ -261,6 +269,20 @@ public class Board {
             boardString += "\n";
         }
         return boardString;
+    }
+
+    /**
+     *
+     * @returns string representation of the board to be printed out later
+     */
+    public String toString() {
+        // mines should not be drawn
+        return getBoardString(false);
+    }
+
+    public String stringFail() {
+        // mines should be drawn
+        return getBoardString(true);
     }
 
     /**
@@ -297,17 +319,20 @@ public class Board {
      * @return the whether digging a spot will kill you
      */
     public boolean isDangerous(int x, int y) {
+        boolean ret;
         if ( firstClick && getCell( x , y ).isMined() ) {
             moveMineSafelyAway( x , y);
-            firstClick = false;
-            return false;
+            ret = false;
         }
         else if ( getCell( x , y ).isMined() ) {
-            return true;
+            ret = true;
         }
         else {
-            return false;
+            ret = false;
         }
+
+        firstClick = false;
+        return ret;
     }
 
     /**
