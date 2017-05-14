@@ -18,7 +18,7 @@ public class Main {
         
         int dimension = getValueConsole( "What dimension should the board be?" , MAXDIMENSION );
         int numMines = getValueConsole( "How many mines should be placed?" , (int)(MAXPERCENTMINES*dimension*dimension) );
-        
+
         if ( aiPlay ) {
             int numTrails = getValueConsole( "How many trails of the AIs should be run?" , Integer.MAX_VALUE );
 
