@@ -12,7 +12,7 @@ public class ProbabilisticPlayer extends AbstractPlayer {
 
     public ProbabilisticPlayer(Board board , int numMines ) {
         setBoard( board );
-        setDimension( board.getBoard().length );
+        setDimension( board.getDimension() );
         setNumMines( numMines );
     }
 
@@ -34,14 +34,11 @@ public class ProbabilisticPlayer extends AbstractPlayer {
                 }
             }
             else {
+                // pick a random location
                 Cell randomLocation = randomLocation();
-                if ( getBoard().isDangerous( randomLocation.getX() , randomLocation.getY() ) ) {
-                    return false;
-                }
-                else {
-                    getBoard().uncoverLocation( randomLocation.getX() , randomLocation.getY() );
-                    computeProbabilities();
-                }
+                getBoard().uncoverLocation( randomLocation.getX() , randomLocation.getY() );
+                // updated the probabilities
+                computeProbabilities();
             }
         }
         if ( getBoard().checkSolved() )
@@ -62,19 +59,13 @@ public class ProbabilisticPlayer extends AbstractPlayer {
         for ( String cellStr : probMap.keySet() ) {
             double value = probMap.get( cellStr );
             // cell must have smaller probability and be covered
-            if ( value < minValue && getBoard().getCellStr( cellStr ).isCovered() ) {
+            if ( value < minValue && getBoard().getCellStr( cellStr ) != null ) {
                 minValue = value;
                 smallestProbCell = getBoard().getCellStr(cellStr);
             }
         }
 
-        // makes sure that the pointer to the cell is correct
-        if ( smallestProbCell != null) {
-            return getBoard().getCell(smallestProbCell.getX(), smallestProbCell.getY());
-        }
-        else {
-            return null;
-        }
+        return smallestProbCell;
     }
 
     /**
@@ -83,7 +74,7 @@ public class ProbabilisticPlayer extends AbstractPlayer {
     private void computeProbabilities() {
         for ( int x = 0 ; x < getDimension() ; x++ ) {
             for ( int y = 0 ; y < getDimension() ; y++ ) {
-                if ( ! getBoard().getCell( x , y ).isCovered() ) {
+                if ( getBoard().getCell( x , y ) != null ) {
                     computeProbabilityNeighborMines( getBoard().getCell( x , y ) );
                 }
             }
@@ -136,7 +127,8 @@ public class ProbabilisticPlayer extends AbstractPlayer {
         while ( randomCell == null || ! randomCell.isCovered() ) {
             int x = randomInt(getDimension());
             int y = randomInt(getDimension());
-            randomCell = getBoard().getCell(x, y);
+            // return a representation of the cell to be uncovered
+            randomCell = new Cell(x, y, false);
         }
         return randomCell;
     }

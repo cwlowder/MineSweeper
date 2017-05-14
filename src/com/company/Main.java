@@ -11,13 +11,14 @@ public class Main {
     private static final int MAXDIMENSION = 77;
     private static final String YES = "YES";
     private static final String NO = "NO";
+    private static final float MAXPERCENTMINES = .90f;
 
     public static void main(String[] args) {
         boolean aiPlay = getYesNoConsole("Should AI play(YES/NO)?");
         
         int dimension = getValueConsole( "What dimension should the board be?" , MAXDIMENSION );
-        int numMines = getValueConsole( "How many mines should be placed?" , dimension*dimension );
-
+        int numMines = getValueConsole( "How many mines should be placed?" , (int)(MAXPERCENTMINES*dimension*dimension) );
+        
         if ( aiPlay ) {
             int numTrails = getValueConsole( "How many trails of the AIs should be run?" , Integer.MAX_VALUE );
 
@@ -110,6 +111,7 @@ public class Main {
             int xPos = getValueConsole("What X position should be digged?", dimension - 1);
             int yPos = getValueConsole("What Y position should be digged?", dimension - 1);
 
+            // most uncover location and then check if it is dangerous
             board.uncoverLocation(xPos, yPos);
 
             if ( board.isDangerous( xPos, yPos) ) {
