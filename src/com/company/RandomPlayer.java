@@ -7,7 +7,7 @@ public class RandomPlayer extends AbstractPlayer {
 
     public RandomPlayer(Board board , int numMines) {
         setBoard( board );
-        setDimension( board.getBoard().length );
+        setDimension( board.getDimension() );
         setNumMines( numMines );
     }
 
@@ -20,11 +20,12 @@ public class RandomPlayer extends AbstractPlayer {
         while ( ! getBoard().checkSolved() ) {
             int xPos = randomInt( getDimension() );
             int yPos = randomInt( getDimension() );
-            if ( getBoard().getCell( xPos , yPos ).isCovered() ) {
+            if ( getBoard().getCell( xPos , yPos ) == null ) {
+                // must uncover a location
+                getBoard().uncoverLocation(xPos, yPos);
+                // then check if the location is a mine
                 if ( getBoard().isDangerous( xPos , yPos ) ) {
                     return false;
-                } else {
-                    getBoard().uncoverLocation(xPos, yPos);
                 }
             }
         }

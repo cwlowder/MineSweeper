@@ -16,8 +16,6 @@ public class Board {
     public Board ( int dimension , int numMines ) {
         this.dimension = dimension;
         this.numMines = numMines;
-        generateBoard( numMines );
-        calcNumNeighborMines();
         firstClick = true;
     }
 
@@ -27,9 +25,15 @@ public class Board {
      */
     public boolean checkSolved() {
         int numCovered = 0;
+
+        // checks if the first click hasn't been made, thus board is not generated
+        if(firstClick) {
+            return false;
+        }
+
         for ( int x = 0 ; x < dimension ; x ++ ) {
             for ( int y = 0 ; y < dimension ; y ++ ) {
-                if ( getCell(x,y).isCovered() ){
+                if ( getCellSpecific(x,y).isCovered() ){
                     numCovered++;
                 }
             }
@@ -43,7 +47,8 @@ public class Board {
     }
 
     /**
-     *
+     * Note: this method handles if the first spot dug is a mine as specified: http://www.techuser.net/mineclick.html
+     * as well as making sure the neighbors aren't mines
      * @param x the x position to uncover
      * @param y the y position to uncover
      */
@@ -53,6 +58,12 @@ public class Board {
          * Handling the fact your first click can never be a mine
          * Reasoning behind this implementation can be found here: http://www.techuser.net/mineclick.html
          */
+        if(firstClick) {
+            // generate board with a hole
+            generateBoard(numMines, x, y);
+            firstClick = false;
+        }
+
         board[x][y].reveal();
         ArrayList<Cell> neighbors = findNeighbors(x, y);
 
@@ -70,13 +81,15 @@ public class Board {
     /**
      *
      *  @param numMines the number of mines to be placed
+     *  @param xPos the location to not fill with a mine
+     *  @param yPos the location to not fill with a mine
      */
-    private void generateBoard( int numMines ) {
+    private void generateBoard( int numMines, int xPos, int yPos ) {
         // Initalizes board to be dimension x dimension
         board = new Cell[dimension][dimension];
 
         // places all the mines needed
-        placeMines( numMines );
+        placeMines( numMines , xPos, yPos);
 
         // fills the rest of the board with none mines
         for (int x = 0; x < dimension; x++) {
@@ -88,16 +101,26 @@ public class Board {
                 }
             }
         }
+
+        // figure out the number of neighbor mines
+        calcNumNeighborMines();
     }
 
     /**
      *  Doesn't place empty elements onto the board, just mines
      *  @param numMines the number of mines to be placed on the board
+     *  @param xHole the x position of the hole to not fill mines
+     *  @param yHole the y position of the hole to not fill mines
      */
-    private void placeMines( int numMines) {
+    private void placeMines( int numMines, int xHole, int yHole) {
         while (numMines > 0) {
             int xPos = randomInt(dimension);
             int yPos = randomInt(dimension);
+
+            // accounts for the hole not to fill with mines
+            if(Math.abs(xHole - xPos) <= 1 || Math.abs(yHole - yPos) <= 1) {
+                continue;
+            }
 
             // Checks to see if position on board is empty
             if (board[xPos][yPos] == null) {
@@ -177,8 +200,8 @@ public class Board {
 
                 if ( shouldAdd ) {
                     if (board[i][j] != null) {
-                        if ( getCell( i , j ) != null ) {
-                            neighbors.add( getCell(i, j) );
+                        if ( getCellSpecific( i , j ) != null ) {
+                            neighbors.add( getCellSpecific(i, j) );
                         }
                     }
                 }
@@ -192,9 +215,32 @@ public class Board {
      *
      * @param x the x position of the cell to return
      * @param y the y position of the cell to return
-     * @return the cell which matches the x,y position
+     * @return the cell which matches the x,y position, note a null will be returned if the location is uncovered
      */
     public Cell getCell( int x , int y ) {
+        // checks if the board has been instantiated
+        if(getBoard() == null) {
+            return null;
+        }
+
+        Cell cell = getCellSpecific(x, y);
+
+        if(!cell.isCovered()) {
+            return board[x][y];
+        }
+        // return null if position is covered
+        else {
+            return null;
+        }
+    }
+
+    /**
+     * note: no null will be returned for covered cells
+     * @param x the x position of the cell to return
+     * @param y the y position of the cell to return
+     * @return the cell which matches the x,y position
+     */
+    private Cell getCellSpecific( int x , int y ) {
         if ( x >= 0 && y >= 0 ) {
             if ( x < dimension && y < dimension ) {
                 return board[x][y];
@@ -245,8 +291,8 @@ public class Board {
             boardString += y + "|";
             // running through the elements on a line
             for ( int x = 0 ; x < dimension ; x++ ) {
-                if ( getCell(x,y).isCovered() ) {
-                    if( drawMines && getCell(x, y).isMined() ) {
+                if ( getCellSpecific(x,y).isCovered() ) {
+                    if( drawMines && getCellSpecific(x, y).isMined() ) {
                         boardString += "M";
                     }
                     else {
@@ -303,34 +349,29 @@ public class Board {
     }
 
     /**
-     *
+     * note: returns a representation of a cell
      * @param cellStr the string representation of the target cell
      * @return the cell object correlated with that cellStr
      */
     public Cell getCellStr(String cellStr) {
         String[] coords= cellStr.split(",");
-        return getCell( Integer.parseInt( coords[0] ) , Integer.parseInt( coords[1] ) );
+        return new Cell(Integer.parseInt( coords[0] ) , Integer.parseInt( coords[1] ), false);
     }
 
     /**
-     * Note: this method handles if the first spot dug is a mine as specified: http://www.techuser.net/mineclick.html
+     *
      * @param x the x position to be dug
      * @param y the y position to be dug
      * @return the whether digging a spot will kill you
      */
     public boolean isDangerous(int x, int y) {
         boolean ret;
-        if ( firstClick && getCell( x , y ).isMined() ) {
-            moveMineSafelyAway( x , y);
-            ret = false;
-        }
-        else if ( getCell( x , y ).isMined() ) {
+        if ( getCellSpecific( x , y ).isMined() ) {
             ret = true;
         }
         else {
             ret = false;
         }
-
         firstClick = false;
         return ret;
     }
@@ -343,11 +384,20 @@ public class Board {
     private void moveMineSafelyAway( int xPos, int yPos ) {
         boolean isMoved = false;
 
+        // short circuit if out of bounds
+        if( xPos >= dimension || xPos < 0 || yPos >= dimension || yPos < 0 ) {
+            return;
+        }
+        // short circuit if pos is not mined
+        if(!getCellSpecific(xPos, yPos).isMined()) {
+            return;
+        }
+
         // finds first open spot with no mine
-        for ( int x = 0 ; x < dimension ; x++ ) {
-            for ( int y = 0 ; y < dimension ; y++ ) {
+        for ( int y = 0 ; y < dimension ; y++ ) {
+            for ( int x = 0 ; x < dimension ; x++ ) {
                 if ( x != xPos && y != yPos && ! isMoved ) {
-                    if ( ! getCell(x, y).isMined() ) {
+                    if ( ! getCellSpecific(x, y).isMined() ) {
                         board[x][y] = new Cell( xPos , yPos , true);
                         board[xPos][yPos] = new Cell( x , y , false);
                         isMoved = true;
@@ -355,7 +405,13 @@ public class Board {
                 }
             }
         }
-        // makes sure the neighbor mines is calculated correctly
-        calcNumNeighborMines();
+    }
+
+    /**
+     *
+     * @return the dimension of the board
+     */
+    public int getDimension() {
+        return dimension;
     }
 }
