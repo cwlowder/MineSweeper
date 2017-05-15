@@ -1,6 +1,5 @@
 package com.company;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -11,12 +10,12 @@ public class Board {
     private int dimension;
     private Cell[][] board;
     private int numMines;
-    private boolean firstClick;
+    private boolean BoardIsUngenerated;
 
     public Board ( int dimension , int numMines ) {
         this.dimension = dimension;
         this.numMines = numMines;
-        firstClick = true;
+        BoardIsUngenerated = true;
     }
 
     /**
@@ -27,7 +26,7 @@ public class Board {
         int numCovered = 0;
 
         // checks if the first click hasn't been made, thus board is not generated
-        if(firstClick) {
+        if(BoardIsUngenerated) {
             return false;
         }
 
@@ -58,10 +57,10 @@ public class Board {
          * Handling the fact your first click can never be a mine
          * Reasoning behind this implementation can be found here: http://www.techuser.net/mineclick.html
          */
-        if(firstClick) {
+        if(BoardIsUngenerated) {
             // generate board with a hole
             generateBoard(numMines, x, y);
-            firstClick = false;
+            BoardIsUngenerated = false;
         }
 
         board[x][y].reveal();
@@ -366,7 +365,7 @@ public class Board {
      */
     public boolean isDangerous(int x, int y) {
         boolean ret;
-        if( firstClick ) {
+        if(BoardIsUngenerated) {
             // if the board has not been generated yet
             ret = true;
         }
@@ -376,7 +375,7 @@ public class Board {
         else {
             ret = false;
         }
-        firstClick = false;
+
         return ret;
     }
 
