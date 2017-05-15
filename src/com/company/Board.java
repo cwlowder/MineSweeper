@@ -214,11 +214,11 @@ public class Board {
      *
      * @param x the x position of the cell to return
      * @param y the y position of the cell to return
-     * @return the cell which matches the x,y position, note a null will be returned if the location is uncovered
+     * @return the cell which matches the x,y position, note a representation will be returned if the location is uncovered
      */
     public Cell getCell( int x , int y ) {
-        // checks if the board has been instantiated
-        if(getBoard() == null) {
+        // checks if the board hasn't been instantiated
+        if(BoardIsUngenerated) {
             return null;
         }
 
@@ -227,9 +227,9 @@ public class Board {
         if(!cell.isCovered()) {
             return board[x][y];
         }
-        // return null if position is covered
+        // return a representation if position is covered
         else {
-            return null;
+            return new Cell(x,y, false);
         }
     }
 
