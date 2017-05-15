@@ -17,10 +17,15 @@ public class RandomPlayer extends AbstractPlayer {
      */
     @Override
     public boolean solve() {
+        // init with a single pick
+        int xPos = randomInt( getDimension() );
+        int yPos = randomInt( getDimension() );
+        getBoard().uncoverLocation(xPos, yPos);
+
         while ( ! getBoard().checkSolved() ) {
-            int xPos = randomInt( getDimension() );
-            int yPos = randomInt( getDimension() );
-            if ( getBoard().getCell( xPos , yPos ) == null ) {
+            xPos = randomInt( getDimension() );
+            yPos = randomInt( getDimension() );
+            if ( getBoard().getCell( xPos , yPos ).isCovered() ) {
                 // must uncover a location
                 getBoard().uncoverLocation(xPos, yPos);
                 // then check if the location is a mine

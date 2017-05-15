@@ -1,6 +1,7 @@
 package com.company;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.TreeMap;
 
 /**
@@ -24,11 +25,12 @@ public class ProbabilisticPlayer extends AbstractPlayer {
         while ( ! getBoard().checkSolved() ) {
             if ( probMap.size() > 0 ) {
                 Cell lowestProb = lowestProbLocation();
+                getBoard().uncoverLocation(lowestProb.getX(), lowestProb.getY());
                 if ( getBoard().isDangerous( lowestProb.getX() , lowestProb.getY() ) ) {
+                    //System.out.println(getBoard().stringFail());
                     return false;
                 }
                 else {
-                    getBoard().uncoverLocation(lowestProb.getX(), lowestProb.getY());
                     computeProbabilities();
                     probMap.remove(lowestProb.toString());
                 }
@@ -40,6 +42,7 @@ public class ProbabilisticPlayer extends AbstractPlayer {
                 // updated the probabilities
                 computeProbabilities();
             }
+            //System.out.println(getBoard());
         }
         if ( getBoard().checkSolved() )
             return true;
@@ -74,9 +77,9 @@ public class ProbabilisticPlayer extends AbstractPlayer {
     private void computeProbabilities() {
         for ( int x = 0 ; x < getDimension() ; x++ ) {
             for ( int y = 0 ; y < getDimension() ; y++ ) {
-                if ( getBoard().getCell( x , y ) != null ) {
+                //if ( getBoard().getCell( x , y ) != null ) {
                     computeProbabilityNeighborMines( getBoard().getCell( x , y ) );
-                }
+                //}
             }
         }
     }
@@ -87,7 +90,11 @@ public class ProbabilisticPlayer extends AbstractPlayer {
      * @param cell the uncovered cell which will have its neighbors probabilities of being a mine calculated
      */
     private void computeProbabilityNeighborMines( Cell cell ) {
-        if ( cell.getNeighborMines() > 0 ) {
+        if(cell.isCovered()) {
+            // set probability to being numMines/numCells
+            setProbabilityCell(((double)getNumMines())/(double)(getDimension()*getDimension()), cell);
+        }
+        else if ( cell.getNeighborMines() > 0 ) {
             ArrayList<Cell> neighbors = getBoard().findNeighbors( cell.getX() , cell.getY() );
             int numCoveredNeighbors = 0;
 
@@ -107,14 +114,18 @@ public class ProbabilisticPlayer extends AbstractPlayer {
 
             for ( Cell neighbor : neighbors ) {
                 if ( neighbor.isCovered() ) {
-                    if (!probMap.containsKey(neighbor.toString())) {
-                        probMap.put(neighbor.toString(), probability);
-                    } else {
-                        // adds existing probability with new probability
-                        probMap.put(neighbor.toString(), probability + probMap.get(neighbor.toString() ) );
-                    }
+                    setProbabilityCell(probability, neighbor);
                 }
             }
+        }
+    }
+
+    private void setProbabilityCell(double probability, Cell neighbor) {
+        if (!probMap.containsKey(neighbor.toString())) {
+            probMap.put(neighbor.toString(), probability);
+        } else {
+            // adds existing probability with new probability
+            probMap.put(neighbor.toString(), probability + probMap.get(neighbor.toString() ) );
         }
     }
 
