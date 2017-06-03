@@ -1,8 +1,6 @@
 package com.company;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.TreeMap;
 
 /**
@@ -10,7 +8,7 @@ import java.util.TreeMap;
  */
 public class ProbabilisticPlayer extends AbstractPlayer {
 
-    private Map< String , Double > probMap = new HashMap<>();
+    private TreeMap< String , Double > probMap = new TreeMap<>();
 
     public ProbabilisticPlayer(Board board , int numMines ) {
         setBoard( board );
