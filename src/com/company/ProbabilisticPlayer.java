@@ -9,7 +9,6 @@ import java.util.TreeMap;
  * Created by Curtis Lowder on 10/2/2016.
  */
 public class ProbabilisticPlayer extends AbstractPlayer {
-
     private Map< String , Double > probMap = new HashMap<>();
 
     public ProbabilisticPlayer(Board board , int numMines ) {

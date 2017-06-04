@@ -14,8 +14,23 @@ public class Main {
     private static final float MAXPERCENTMINES = .90f;
 
     public static void main(String[] args) {
+        Board b = new Board(5 , 2);
+        Cell[][] template = {
+                { new Cell(0, 0, false), new Cell( 1, 0, true), new Cell(2, 0, false), new Cell(3, 0, false)},
+                { new Cell(0, 1, false), new Cell( 1, 1, false), new Cell(2, 1, false), new Cell(3, 1, false)},
+                { new Cell(0, 2, true), new Cell( 1, 2, false), new Cell(2, 2, false), new Cell(3, 2, false)},
+                { new Cell(0, 3, false), new Cell( 1, 3, false), new Cell(2, 3, false), new Cell(3, 3, false)}
+        };
+        b.setBoard(template);
+        b.uncoverLocation(3,3);
+        //System.out.println(b.toString());
+        AbstractPlayer player = new FilterPlayer(b, 1);
+        player.solve();
+        System.out.println("END:");
+        System.out.println(b.stringFail());
+        //
         boolean aiPlay = getYesNoConsole("Should AI play(YES/NO)?");
-        
+
         int dimension = getValueConsole( "What dimension should the board be?" , MAXDIMENSION );
         int numMines = getValueConsole( "How many mines should be placed?" , (int)(MAXPERCENTMINES*dimension*dimension) );
 
@@ -23,12 +38,22 @@ public class Main {
             int numTrails = getValueConsole( "How many trails of the AIs should be run?" , Integer.MAX_VALUE );
 
             // probabilistic model
+            /*
             System.out.println("Probabilistic Model:");
             Long startTime = System.currentTimeMillis();
             trailRunAIProbabilistic(dimension, numMines, numTrails);
             Long endTime = System.currentTimeMillis();
             System.out.println("time passed(millisec):" + (endTime - startTime));
+            */
+            // Separator
+            System.out.println("------------");
 
+            // filter model
+            System.out.println("Filter Model:");
+            Long startTime = System.currentTimeMillis();
+            trailRunAIFilter(dimension, numMines, numTrails);
+            Long endTime = System.currentTimeMillis();
+            System.out.println("time passed(millisec):" + (endTime - startTime));
             // Separator
             System.out.println("------------");
 
@@ -88,6 +113,34 @@ public class Main {
 
             Board board = new Board( dimension , numMines );
             AbstractPlayer player = new RandomPlayer( board , numMines );
+
+            boolean isSolved = player.solve();
+
+            if ( isSolved ) {
+                numWins++;
+            }
+        }
+        System.out.println("\rDone!");
+        System.out.println( "WINS: " + numWins + "/" + numTrails );
+        System.out.println( "WIN%: " + 100*( (float) numWins / (float) numTrails) + "%" );
+    }
+
+    /**
+     * plays a number of trails using the FilterPlayer class
+     * prints out the success rate afterwards
+     * also prints out the progress of the AI
+     * @param dimension dimension for the board to be tested
+     * @param numMines the number of mines to place on the board
+     * @param numTrails the number of trails that should be done
+     */
+    private static void trailRunAIFilter(int dimension, int numMines, int numTrails) {
+        int numWins = 0;
+
+        for ( int i = 0 ; i < numTrails ; i++ ) {
+            System.out.print("\rProgress:" + 100 * ( (float) i / (float) numTrails) + "%");
+
+            Board board = new Board( dimension , numMines );
+            AbstractPlayer player = new FilterPlayer( board , numMines );
 
             boolean isSolved = player.solve();
 

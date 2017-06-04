@@ -10,7 +10,6 @@ public abstract class AbstractPlayer {
     private int numMines;
     private int dimension;
 
-
     /**
      *
      * @return a true if the board was solved, a false otherwise

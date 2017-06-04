@@ -52,7 +52,6 @@ public class Board {
      * @param y the y position to uncover
      */
     public void uncoverLocation( int x , int y ) {
-
         /*
          * Handling the fact your first click can never be a mine
          * Reasoning behind this implementation can be found here: http://www.techuser.net/mineclick.html
@@ -63,11 +62,11 @@ public class Board {
             BoardIsUngenerated = false;
         }
 
-        board[x][y].reveal();
+        board[y][x].reveal();
         ArrayList<Cell> neighbors = findNeighbors(x, y);
 
         // only empty cells should reveal neighbor cells
-        if (board[x][y].getNeighborMines() == 0) {
+        if (board[y][x].getNeighborMines() == 0) {
             for (Cell neighbor : neighbors) {
                 // reveals neighbors that are covered and not mines
                 if (neighbor.isCovered() && !neighbor.isMined()) {
@@ -94,9 +93,9 @@ public class Board {
         for (int x = 0; x < dimension; x++) {
             for (int y = 0; y < dimension; y++) {
                 // Checks if the location is empty
-                if (board[x][y] == null) {
+                if (board[y][x] == null) {
                     Cell emptyCell = new Cell(x, y, false);
-                    board[x][y] = emptyCell;
+                    board[y][x] = emptyCell;
                 }
             }
         }
@@ -122,9 +121,9 @@ public class Board {
             }
 
             // Checks to see if position on board is empty
-            if (board[xPos][yPos] == null) {
+            if (board[yPos][xPos] == null) {
                 Cell newMine = new Cell(xPos, yPos, true);
-                board[newMine.getX()][newMine.getY()] = newMine;
+                board[newMine.getY()][newMine.getX()] = newMine;
 
                 // removes the mines that remain to be placed
                 numMines--;
@@ -139,7 +138,7 @@ public class Board {
         for ( int x = 0 ; x < dimension ; x++ ) {
             for ( int y = 0 ; y < dimension ; y++ ) {
                 // Checks to see if a position doesn't contains a mine
-                if ( ! board[x][y].isMined() ) {
+                if ( ! board[y][x].isMined() ) {
                     int numMines = 0;
                     ArrayList<Cell> neighbors = findNeighbors( x , y );
 
@@ -149,7 +148,7 @@ public class Board {
                         }
                     }
 
-                    board[x][y].setNeighborMines( numMines );
+                    board[y][x].setNeighborMines( numMines );
                 }
             }
         }
@@ -163,7 +162,7 @@ public class Board {
         int numCovered = 0;
         for ( int x = 0 ; x < dimension ; x++ ) {
             for ( int y = 0 ; y < dimension ; y++ ) {
-                if ( board[x][y].isCovered() ) {
+                if ( board[y][x].isCovered() ) {
                     numCovered++;
                 }
             }
@@ -198,7 +197,7 @@ public class Board {
                 }
 
                 if ( shouldAdd ) {
-                    if (board[i][j] != null) {
+                    if (board[j][i] != null) {
                         if ( getCellSpecific( i , j ) != null ) {
                             neighbors.add( getCellSpecific(i, j) );
                         }
@@ -223,9 +222,12 @@ public class Board {
         }
 
         Cell cell = getCellSpecific(x, y);
+        if(cell == null) {
+            return null;
+        }
 
         if(!cell.isCovered()) {
-            return board[x][y];
+            return board[y][x];
         }
         // return a representation if position is covered
         else {
@@ -242,7 +244,7 @@ public class Board {
     private Cell getCellSpecific( int x , int y ) {
         if ( x >= 0 && y >= 0 ) {
             if ( x < dimension && y < dimension ) {
-                return board[x][y];
+                return board[y][x];
             }
         }
         return null;
@@ -290,7 +292,10 @@ public class Board {
             boardString += y + "|";
             // running through the elements on a line
             for ( int x = 0 ; x < dimension ; x++ ) {
-                if ( getCellSpecific(x,y).isCovered() ) {
+                if(BoardIsUngenerated) {
+                    boardString += "X";
+                }
+                else if ( getCellSpecific(x,y).isCovered() ) {
                     if( drawMines && getCellSpecific(x, y).isMined() ) {
                         boardString += "M";
                     }
@@ -299,12 +304,12 @@ public class Board {
                     }
                 }
                 else {
-                    if ( drawMines && board[x][y].isMined() ) {
+                    if ( drawMines && board[y][x].isMined() ) {
                         // is highlighted because this position has an exploded mine
                         boardString += Colorer.highlight("M");
                     }
-                    else if ( board[x][y].getNeighborMines() > 0 ) {
-                        boardString += Colorer.color(board[x][y].getNeighborMines());
+                    else if ( board[y][x].getNeighborMines() > 0 ) {
+                        boardString += Colorer.color(board[y][x].getNeighborMines());
                     }
                     else {
                         boardString += ".";
@@ -340,11 +345,15 @@ public class Board {
     }
 
     /**
-     *
-     * @return a 2d array of the cells which represent the board
+     * @param newBoard the board to set this too;
      */
-    public Cell[][] getBoard() {
-        return board;
+    public void setBoard(Cell[][] newBoard) {
+        BoardIsUngenerated = false;
+        this.dimension = newBoard.length;
+        board = newBoard;
+
+        // figure out the number of neighbor mines
+        calcNumNeighborMines();
     }
 
     /**
@@ -401,8 +410,8 @@ public class Board {
             for ( int x = 0 ; x < dimension ; x++ ) {
                 if ( x != xPos && y != yPos && ! isMoved ) {
                     if ( ! getCellSpecific(x, y).isMined() ) {
-                        board[x][y] = new Cell( xPos , yPos , true);
-                        board[xPos][yPos] = new Cell( x , y , false);
+                        board[y][x] = new Cell( xPos , yPos , true);
+                        board[yPos][xPos] = new Cell( x , y , false);
                         isMoved = true;
                     }
                 }
